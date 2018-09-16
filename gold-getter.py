@@ -42,6 +42,8 @@
 #
 #		Make it so that it doesn't exit on win/loss. Instead go into loop using
 #			input and print.
+#
+#		Add obsticals (if path between player and gold retry. same for bomb)
 
 import random
 import readchar
