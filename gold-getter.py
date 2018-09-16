@@ -32,7 +32,7 @@
 #TODO: 	Fix the bug where an endless loop is started if the bomb starts the game
 #		boxxed in a corner by two golds
 #		
-#		Add ability to control player.
+#		Add ability to control player. DONE
 #
 #		Add intellegence to bomb movements.
 #
