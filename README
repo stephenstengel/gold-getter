@@ -1,13 +1,25 @@
-This is a game that I made for a class project.
-Move the player with wasd.
+GOLD GETTER
 
+This is a game that I made for a class project. I've been adding things to it when 
+I get bored.
+
+Run it in a terminal with:
+	python3 gold-getter.py
+Or run it in an IDE.
+
+Objective:
+Get the gold before a bomb gets you!
+
+Controls:
+Move the player with wasd. Player moves twice for every time that the bomb moves.
 
 Key:
-
 P Player
 B Bomb
 G Gold
 , Where the bomb has been
 . Where the player has been
 
-The license is GPL version 2.
+The license is the GNU GPL version 2.
+
+Copyright Stephen Stengel <stephen.stengel@cwu.edu>
