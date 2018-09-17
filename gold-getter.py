@@ -26,28 +26,47 @@
 
 #This is a small game where the player gets the gold and avoids the bomb.
 
-#Controls: 	Press enter to advance the turns.
-#			Once manual control is in, move player with WASD.
+#Controls: 	Move player with WASD.
 
-#TODO: 	Fix the bug where an endless loop is started if the bomb starts the game
-#		boxxed in a corner by two golds.  DONE
-#		
-#		Add ability to control player.  DONE
-#
+#TODO:
 #		Add intellegence to bomb movements.  STARTED
 #
 #		Add more bombs/difficulties.
 #
-#		If bomb finds gold, it should puppyguard it.
+#		Make it so bombs cannot kill before player moves.
 #
-#		Find a way to prevent the jumpy graphics glitch.
+#		Czech spellingz
+#
+#		Prevent user from making the board too small or too big
+#
+#		Figure out what I meant by some of these comments...
+#
+#		If I ever need to change the function createDataArray(), give it better 
+#		variable names.
+#
+#		Also I could simplify createDataArray() by just using the isPlayerHere, 
+#		isBombHere, and isgoldhere functions etc. instead of checking 
+#		coordinates manually.
+#
+
+#DONE:
+#		Fix the bug where an endless loop is started if the bomb starts the game
+#		boxxed in a corner by two golds.  DONE
+#
+#		Add ability to control player.  DONE
+#
+#		Find a way to prevent the jumpy graphics glitch.  DONE
 #
 #		Make it so that it doesn't exit on win/loss. Instead go into loop using
-#			input and print.
+#		input and print.  DONE
+
+#IDEAS:
+#		Keep player from moving more than two squares away from the bomb.
 #
-#		Add obsticals (if path between player and gold retry. same for bomb)
+#		If bomb finds gold, it should puppyguard the gold.
 #
-#		Make it so bomb cannot kill before player moves.
+#		Add obsticals (if no path between player and gold retry. same for bomb)
+
 
 import random
 import readchar
@@ -83,7 +102,7 @@ class Engine(object):
 		return int(size)
 		
 	
-	#this creates the data array that holds the places of the characters and
+	#This creates the data array that holds the places of the characters and
 	#generates the initial positions of the caracters
 	def createDataArray(self, DIMENSION):
 		#print("Creating the game board array that stores the data...")
@@ -94,21 +113,25 @@ class Engine(object):
 									False, \
 									False) for x in range(DIMENSION)] \
 													for y in range(DIMENSION)]
-		#print("Done!")
+		#print("boardArray created!")
 		
+		#sets player's initial position
 		(a, b) = self.randomStart(DIMENSION)
 		boardArray[a][b].isPlayerHere = True
 		
+		#sets bomb's initial position. Repeats if spot is taken.
 		(c, d) = self.randomStart(DIMENSION)
 		while(c == a and d == b):
 			(c, d) = self.randomStart(DIMENSION)
 		boardArray[c][d].isBombHere = True
 		
+		#sets golds initial position.
 		(e, f) = self.randomStart(DIMENSION)
 		while((e == c and f == d) or (e == a and f == b)):
 			(e, f) = self.randomStart(DIMENSION)
 		boardArray[e][f].isGoldHere = True
 		
+		#sets another gold.
 		(g, h) = self.randomStart(DIMENSION)
 		while(     (g == e and h == f) \
 				or (g == c and h == d) \
@@ -117,8 +140,9 @@ class Engine(object):
 		boardArray[g][h].isGoldHere = True
 		
 		return boardArray
-		
-		
+
+
+	#This function contains the loop that runs the game.
 	def playGame(self, boardArray, DIMENSION):
 		updatedBoardArray = boardArray	
 		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
@@ -146,7 +170,8 @@ class Engine(object):
 				
 			#make player walk
 		#	print("\n\n\n\n\n\n\n\n\n\n\n\n\nPlayer's turn...")
-			updatedBoardArray = self.movePlayerManual(updatedBoardArray, DIMENSION)
+			updatedBoardArray = \
+							 self.movePlayerManual(updatedBoardArray, DIMENSION)
 			#playerongold?
 			if(self.isPlayerOnGold(updatedBoardArray, DIMENSION)):
 				(a, b) = self.getPlayerPosition(updatedBoardArray, DIMENSION)
@@ -172,7 +197,8 @@ class Engine(object):
 				break
 			
 			#make player walk again
-			updatedBoardArray = self.movePlayerManual(updatedBoardArray, DIMENSION)
+			updatedBoardArray = \
+							 self.movePlayerManual(updatedBoardArray, DIMENSION)
 			#playerongold?
 			if(self.isPlayerOnGold(updatedBoardArray, DIMENSION)):
 				(a, b) = self.getPlayerPosition(updatedBoardArray, DIMENSION)
@@ -203,37 +229,23 @@ class Engine(object):
 	def displayBoard(self, boardArray, DIMENSION):
 		#print("Displaying board...")
 		print("##################")
-		
-		# ~ for i in range(DIMENSION):
-			# ~ for j in range(DIMENSION):
-				# ~ print("row: " + str(i) + "column: " + str(j))
-				# ~ print("isBombHere: " + str(boardArray[i][j].isBombHere), end = "")
-				# ~ print(" isPlayerHere: " + str(boardArray[i][j].isPlayerHere), end = "")
-				# ~ print(" wasBombHere: " + str(boardArray[i][j].wasBombHere), end = "")
-				# ~ print(" wasPlayerHere: " + str(boardArray[i][j].wasPlayerHere), end = "")
-				# ~ print(" isGoldHere: " + str(boardArray[i][j].isGoldHere), end = "")
-				# ~ print("\n")
-		
 		the_underscores = "_"
-		print(" " + str(the_underscores * (  (DIMENSION * 3) + (DIMENSION - 1)  )   ))
+		print(" " + \
+				str(the_underscores * (  (DIMENSION * 3) + (DIMENSION - 1)  ) ))
+				
 		for i in range(DIMENSION):
 			for j in range(DIMENSION):
-				print("| " + self.displayCharacters(boardArray, i, j) + " ", end = '')
+				print("| " \
+							+ self.displayCharacters(boardArray, i, j) \
+							+ " ", end = '')
 			print("|\n ", end = "")
-			print(the_underscores * (  (DIMENSION * 3) + (DIMENSION - 1)  )   )
+			print(the_underscores * (  (DIMENSION * 3) + (DIMENSION - 1)  ) )
 		#for underscores we need DIMENSION*3 + (DIMENSION - 1) underscores
 		#print("Done!")
 		
-		#original
-		# ~ for i in range(DIMENSION):
-			# ~ for j in range(DIMENSION):
-				# ~ print("| " + self.displayCharacters(boardArray, i, j) + " ", end = '')
-			# ~ print("|\n _______________")
 		
-		
-	#this function needs to return characters with a priority of:
-	#	bomb, player, gold, bombtrail, playertrail
-	#bomb highest
+	#This function needs to return characters with a priority of:
+	#bomb, player, gold, bombtrail, playertrail
 	def displayCharacters(self, boardArray, i, j):
 		if(boardArray[i][j].isBombHere):
 			return "B"
@@ -259,6 +271,7 @@ class Engine(object):
 		return (i, j)
 
 
+	#Checks the boardArray for gold
 	def isThereStillGold(self, boardArray, DIMENSION):
 		#print("isThereStillGold has been called")
 		for i in range(DIMENSION):
@@ -270,7 +283,8 @@ class Engine(object):
 		
 	#checks if bomb is on the player
 	def isBombOnPlayer(self, boardArray, DIMENSION):
-		if(self.getPlayerPosition(boardArray, DIMENSION) == self.getBombPosition(boardArray, DIMENSION)):
+		if(self.getPlayerPosition(boardArray, DIMENSION) \
+					== self.getBombPosition(boardArray, DIMENSION)):
 			return True
 		return False
 	
@@ -295,7 +309,9 @@ class Engine(object):
 				if(boardArray[i][j].isBombHere):
 					return (i, j)
 		return (i, j)
-		
+
+
+	#Why is it called IF?
 	def checkIfGoldPosition(self, boardArray, DIMENSION):
 		i = -1
 		j = -1
@@ -306,25 +322,21 @@ class Engine(object):
 		return (i, j)
 
 				
-	#My idea is to just swap out the random bits with user input.
-	#https://stackoverflow.com/questions/510357/python-read-a-single-character-from-the-user
-		#~ import readchar
-		#~ print("Reading a char:")
-		#~ print(repr(readchar.readchar()))
-		#~ print("Reading a key:")
-		#~ print(repr(readchar.readkey()))
+	#Move the player! Manually!
 	def movePlayerManual(self, boardArray, DIMENSION):
 		(currentY, currentX) = self.getPlayerPosition(boardArray, DIMENSION)
 		(finalY, finalX) = (currentY, currentX)
 				
 		#this section ayy
-		#put in an input at the top of inside the while, then remove the random bits
 		while( (finalY, finalX) == (currentY, currentX) ):
 			#print("Which way do you want to go?!")
 			wayToGo = "q"
-			while((wayToGo != "w") and (wayToGo != "a") and (wayToGo != "s") and (wayToGo != "d")):
+			while( (wayToGo != "w") \
+					and (wayToGo != "a") \
+					and (wayToGo != "s") \
+					and (wayToGo != "d") ):
 				wayToGo = readchar.readchar()
-			if(wayToGo == "w"):#up####################################
+			if(wayToGo == "w"):#up
 				#print("up")
 				(y, x) = ((currentY - 1), currentX)
 			#	print("y of proposed position " + str(y))
@@ -345,18 +357,22 @@ class Engine(object):
 			#	print("y of proposed position " + str(y))
 			#	print("x of proposed position " + str(x))
 				
-			#wait! just return the one thing that you want changed and change/set it in the game function?
-			#not sure what that comment means now
+			#wait! just return the one thing that you want changed and 
+			#change/set it in the game function?
+			#Not sure what that comment was supposed to mean.
 			if(self.checkIfCanMovePlayer(boardArray, DIMENSION, y, x)):
 				boardArray[currentY][currentX].isPlayerHere = False
 				boardArray[currentY][currentX].wasPlayerHere = True
-			#	print("boardArray[currY][currX].isPlayerHere: " + str(boardArray[currentY][currentX].isPlayerHere))
+			#	print("boardArray[currY][currX].isPlayerHere: " \
+			#		+ str(boardArray[currentY][currentX].isPlayerHere))
 				boardArray[y][x].isPlayerHere = True
-			#	print("boardArray[y][x].isPlayerHere: " + str(boardArray[y][x].isPlayerHere))
+			#	print("boardArray[y][x].isPlayerHere: " \
+			#		+ str(boardArray[y][x].isPlayerHere))
 				(finalY, finalX) = (y, x)
 			#	print("returnning boardArray")
 				return boardArray
 		
+	#Checks proposed movement for validity.
 	def checkIfCanMovePlayer(self, boardArray, DIMENSION, y, x):
 		if(y < 0):
 			return False
@@ -387,10 +403,15 @@ class Engine(object):
 		(finalY, finalX) = (currentY, currentX)
 		(playerY, playerX) = self.getPlayerPosition(boardArray, DIMENSION)
 		#print("Player is at..." + str(playerY) + ", " + str(playerX))
-		print("bomb distance: " + str(self.bombDistance(playerY, playerX, currentY, currentX)) )
+		print("bomb distance: " \
+				+ str(self.bombDistance(playerY, playerX, currentY, currentX)) )
 		
+		#stuckCounter is how many times the bomb has tried and failed to move.
+		#The bomb will not move if it hits 50.
 		stuckCounter = 0
-		while( ((finalY, finalX) == (currentY, currentX)) and (stuckCounter < 50) ):
+		while( ((finalY, finalX) == (currentY, currentX)) \
+						and (stuckCounter < 50) ):
+							
 			num = random.uniform(0.0, 1.0)
 			if(num < 0.25):#up
 		#		print("up")
@@ -415,16 +436,26 @@ class Engine(object):
 			#throoooow = print(input("heh"))
 			
 			#distance checks
-			currentBombDistance = self.bombDistance(playerY, playerX, currentY, currentX)
+			currentBombDistance = self.bombDistance(playerY, \
+													playerX, \
+													currentY, \
+													currentX)
 			proposedBombDistance = self.bombDistance(playerY, playerX, y, x)
 
-			if(self.checkIfCanMoveBomb(boardArray, DIMENSION, y, x, currentBombDistance, proposedBombDistance)):
-				#print("running the second if...")
+			if(self.checkIfCanMoveBomb(boardArray, \
+									   DIMENSION, \
+									   y, \
+									   x, \
+									   currentBombDistance, \
+									   proposedBombDistance)):
+				#print("running the second if in moveBomb...")
 				boardArray[currentY][currentX].isBombHere = False
 				boardArray[currentY][currentX].wasBombHere = True
-			#	print("boardArray[currY][currX].isBombHere: " + str(boardArray[currentY][currentX].isBombHere))
+			#	print("boardArray[currY][currX].isBombHere: " \
+			#			+ str(boardArray[currentY][currentX].isBombHere))
 				boardArray[y][x].isBombHere = True
-			#	print("boardArray[y][x].isBombHere: " + str(boardArray[y][x].isBombHere))
+			#	print("boardArray[y][x].isBombHere: " \
+			#			+ str(boardArray[y][x].isBombHere))
 				(finalY, finalX) = (y, x)
 			#	print("returnning boardArray")
 				return boardArray
@@ -432,7 +463,13 @@ class Engine(object):
 		return boardArray
 				
 				
-	def checkIfCanMoveBomb(self, boardArray, DIMENSION, y, x, currentBombDistance, proposedBombDistance):
+	def checkIfCanMoveBomb(self, \
+						   boardArray, \
+						   DIMENSION, \
+						   y, \
+						   x, \
+						   currentBombDistance, \
+						   proposedBombDistance):
 		if(y < 0):
 			return False
 		elif(y > DIMENSION - 1):
@@ -441,7 +478,6 @@ class Engine(object):
 			return False
 		elif(x > DIMENSION - 1):
 			return False
-		#need ifgoldhere
 		elif(boardArray[y][x].isGoldHere):
 			return False
 		elif(proposedBombDistance > currentBombDistance):
@@ -449,6 +485,7 @@ class Engine(object):
 		else:
 			return True
 	
+	#Returns the direct distance between the player and bomb.
 	def bombDistance(self, playerY, playerX, bombY, bombX):
 		return math.sqrt( (playerX - bombX)**2 + (playerY - bombY)**2 )
 			
@@ -461,18 +498,12 @@ class Engine(object):
 		else:
 		#	print("player is NOT on gold")
 			return False
-		
-	
+
+
+	#Deletes a gold!? Call Greenspan!
 	def deleteGold(self, boardArray, DIMENSION, a, b):
 		boardArray[a][b].isGoldHere = False
-		
-		
-	# ~ def betterRandomStart(self):
-		# ~ i = -1.0
-		# ~ j = -1.0
-		# ~ i = random.randint(0, DIMENSION)
-		# ~ j = random.randint(0, DIMENSION)
-		# ~ return (i, j)
+
 
 def main():
 	e = Engine()
@@ -644,13 +675,45 @@ if __name__ == '__main__':
 
 ###################
 #this next bit just displays the values of the contents of the array
-		# ~ print("\nContents of the array")
-		# ~ for i in range(DIMENSION):
-			# ~ for j in range(DIMENSION):
-				# ~ print("row: " + str(i) + "column: " + str(j))
-				# ~ print("isBombHere: " + str(boardArray[i][j].isBombHere), end = "")
-				# ~ print(" isPlayerHere: " + str(boardArray[i][j].isPlayerHere), end = "")
-				# ~ print(" wasBombHere: " + str(boardArray[i][j].wasBombHere), end = "")
-				# ~ print(" wasPlayerHere: " + str(boardArray[i][j].wasPlayerHere), end = "")
-				# ~ print(" isGoldHere: " + str(boardArray[i][j].isGoldHere), end = "")
-				# ~ print("\n")
+# ~ print("\nContents of the array")
+# ~ for i in range(DIMENSION):
+	# ~ for j in range(DIMENSION):
+		# ~ print("row: " + str(i) + "column: " + str(j))
+		# ~ print("isBombHere: " + str(boardArray[i][j].isBombHere), end = "")
+		# ~ print(" isPlayerHere: " + str(boardArray[i][j].isPlayerHere), end = "")
+		# ~ print(" wasBombHere: " + str(boardArray[i][j].wasBombHere), end = "")
+		# ~ print(" wasPlayerHere: " + str(boardArray[i][j].wasPlayerHere), end = "")
+		# ~ print(" isGoldHere: " + str(boardArray[i][j].isGoldHere), end = "")
+		# ~ print("\n")
+################################
+#Taken from displayBoard:
+# ~ for i in range(DIMENSION):
+	# ~ for j in range(DIMENSION):
+		# ~ print("row: " + str(i) + "column: " + str(j))
+		# ~ print("isBombHere: " + str(boardArray[i][j].isBombHere), end = "")
+		# ~ print(" isPlayerHere: " + str(boardArray[i][j].isPlayerHere), end = "")
+		# ~ print(" wasBombHere: " + str(boardArray[i][j].wasBombHere), end = "")
+		# ~ print(" wasPlayerHere: " + str(boardArray[i][j].wasPlayerHere), end = "")
+		# ~ print(" isGoldHere: " + str(boardArray[i][j].isGoldHere), end = "")
+		# ~ print("\n")
+		
+# ~ for i in range(DIMENSION):
+	# ~ for j in range(DIMENSION):
+		# ~ print("| " + self.displayCharacters(boardArray, i, j) + " ", end = '')
+	# ~ print("|\n _______________")
+############################
+#https://stackoverflow.com/questions/510357/python-read-a-single-character-from-the-user
+#~ import readchar
+#~ print("Reading a char:")
+#~ print(repr(readchar.readchar()))
+#~ print("Reading a key:")
+#~ print(repr(readchar.readkey()))
+###########
+#?????????
+# ~ def betterRandomStart(self):
+	# ~ i = -1.0
+	# ~ j = -1.0
+	# ~ i = random.randint(0, DIMENSION)
+	# ~ j = random.randint(0, DIMENSION)
+	# ~ return (i, j)
+##################
