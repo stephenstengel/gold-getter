@@ -34,9 +34,11 @@
 #		
 #		Add ability to control player.  DONE
 #
-#		Add intellegence to bomb movements.
+#		Add intellegence to bomb movements.  STARTED
 #
 #		Add more bombs/difficulties.
+#
+#		If bomb finds gold, it should puppyguard it.
 #
 #		Find a way to prevent the jumpy graphics glitch.
 #
@@ -49,6 +51,7 @@
 
 import random
 import readchar
+import math
 
 class SquareStatus(object):
 	def __init__(self, isBombHere, isPlayerHere, \
@@ -368,6 +371,7 @@ class Engine(object):
 			#~ return False
 		else:
 			return True
+
 		
 	#I need to make the bomb smarter.
 	#Add a thing to check bomb's y,x position compared to player position
@@ -376,9 +380,14 @@ class Engine(object):
 	#anything here and it will just get sent back here to roll again.
 	#	Might need to add a counter loop to prevent getting stuck behind an
 	#	obstical. Or just add a don't move condition?
+	#Need a new function to check the distance between the bomb and the player
+	#	Could just use standard distance formula from algebra?
 	def moveBomb(self, boardArray, DIMENSION):
 		(currentY, currentX) = self.getBombPosition(boardArray, DIMENSION)
 		(finalY, finalX) = (currentY, currentX)
+		(playerY, playerX) = self.getPlayerPosition(boardArray, DIMENSION)
+		#print("Player is at..." + str(playerY) + ", " + str(playerX))
+		print("bomb distance: " + str(self.bombDistance(playerY, playerX, currentY, currentX)) )
 		
 		stuckCounter = 0
 		while( ((finalY, finalX) == (currentY, currentX)) and (stuckCounter < 50) ):
@@ -404,8 +413,12 @@ class Engine(object):
 		#		print("y of proposed position " + str(y))
 		#		print("x of proposed position " + str(x))
 			#throoooow = print(input("heh"))
+			
+			#distance checks
+			currentBombDistance = self.bombDistance(playerY, playerX, currentY, currentX)
+			proposedBombDistance = self.bombDistance(playerY, playerX, y, x)
 
-			if(self.checkIfCanMoveBomb(boardArray, DIMENSION, y, x)):
+			if(self.checkIfCanMoveBomb(boardArray, DIMENSION, y, x, currentBombDistance, proposedBombDistance)):
 				#print("running the second if...")
 				boardArray[currentY][currentX].isBombHere = False
 				boardArray[currentY][currentX].wasBombHere = True
@@ -419,7 +432,7 @@ class Engine(object):
 		return boardArray
 				
 				
-	def checkIfCanMoveBomb(self, boardArray, DIMENSION, y, x):
+	def checkIfCanMoveBomb(self, boardArray, DIMENSION, y, x, currentBombDistance, proposedBombDistance):
 		if(y < 0):
 			return False
 		elif(y > DIMENSION - 1):
@@ -431,8 +444,13 @@ class Engine(object):
 		#need ifgoldhere
 		elif(boardArray[y][x].isGoldHere):
 			return False
+		elif(proposedBombDistance > currentBombDistance):
+			return False
 		else:
 			return True
+	
+	def bombDistance(self, playerY, playerX, bombY, bombX):
+		return math.sqrt( (playerX - bombX)**2 + (playerY - bombY)**2 )
 			
 	
 	def isPlayerOnGold(self, boardArray, DIMENSION):#THIS FIRST HAAHA
