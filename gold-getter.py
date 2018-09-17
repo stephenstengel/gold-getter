@@ -30,9 +30,9 @@
 #			Once manual control is in, move player with WASD.
 
 #TODO: 	Fix the bug where an endless loop is started if the bomb starts the game
-#		boxxed in a corner by two golds
+#		boxxed in a corner by two golds.  DONE
 #		
-#		Add ability to control player. DONE
+#		Add ability to control player.  DONE
 #
 #		Add intellegence to bomb movements.
 #
@@ -44,6 +44,8 @@
 #			input and print.
 #
 #		Add obsticals (if path between player and gold retry. same for bomb)
+#
+#		Make it so bomb cannot kill before player moves.
 
 import random
 import readchar
@@ -126,7 +128,7 @@ class Engine(object):
 			updatedBoardArray = self.moveBomb(updatedBoardArray, DIMENSION)
 			print(	"\n\n\n\n\n\n\n\n\n\n\n\n\n" \
 					"\n\n\n\n\n\n\n\n\n\n\n\n\n" \
-					"Bomb's turn...")
+					"Avoid the bomb!")
 			self.displayBoard(updatedBoardArray, DIMENSION)
 			#throwAwayVariable = print(input("press enter key to continue!"))
 			
@@ -148,7 +150,7 @@ class Engine(object):
 				self.deleteGold(updatedBoardArray, DIMENSION, a, b)
 			print(	"\n\n\n\n\n\n\n\n\n\n\n\n\n" \
 					"\n\n\n\n\n\n\n\n\n\n\n\n\n" \
-					"Player's turn...")
+					"Avoid the bomb!")
 			self.displayBoard(updatedBoardArray, DIMENSION)
 			#throwAwayVariable = print(input("press enter key to continue!"))
 			
@@ -367,18 +369,19 @@ class Engine(object):
 		else:
 			return True
 		
-	#bomb cannot walk onto gold
+	#I need to make the bomb smarter.
+	#Add a thing to check bomb's y,x position compared to player position
+	#Make bomb only able to reduce distance between it and player.
+	#Maybe just put this in the canBombMove function? Then don't need to change
+	#anything here and it will just get sent back here to roll again.
+	#	Might need to add a counter loop to prevent getting stuck behind an
+	#	obstical. Or just add a don't move condition?
 	def moveBomb(self, boardArray, DIMENSION):
 		(currentY, currentX) = self.getBombPosition(boardArray, DIMENSION)
 		(finalY, finalX) = (currentY, currentX)
 		
-	#	print("y of current position " + str(currentY))
-	#	print("x of current position " + str(currentX))
-		# ~ (y, x) = ((a -1), b)
-		# ~ print("y of proposed position" + str(y))
-		# ~ print("x of proposed position" + str(x))
-		
-		while( (finalY, finalX) == (currentY, currentX) ):
+		stuckCounter = 0
+		while( ((finalY, finalX) == (currentY, currentX)) and (stuckCounter < 50) ):
 			num = random.uniform(0.0, 1.0)
 			if(num < 0.25):#up
 		#		print("up")
@@ -412,6 +415,8 @@ class Engine(object):
 				(finalY, finalX) = (y, x)
 			#	print("returnning boardArray")
 				return boardArray
+			stuckCounter += 1
+		return boardArray
 				
 				
 	def checkIfCanMoveBomb(self, boardArray, DIMENSION, y, x):
