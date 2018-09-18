@@ -29,6 +29,10 @@
 #Controls: 	Move player with WASD.
 
 #TODO:
+#		Just figured out how to add bombs. Make the detection functions put
+#		coordinates into a tuple and pass that. Obviously change things to look
+#		for more bombs. Best would be a variable amount of bombs.
+#
 #		Add intellegence to bomb movements.  STARTED
 #
 #		Add more bombs/difficulties.
