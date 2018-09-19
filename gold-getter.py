@@ -29,6 +29,8 @@
 #Controls: 	Move player with WASD.
 
 #TODO:
+#		Add proximity to chase mechanic. Only chase when within two squares?
+#
 #		Just figured out how to add bombs. Make the detection functions put
 #		coordinates into a tuple and pass that. Obviously change things to look
 #		for more bombs. Best would be a variable amount of bombs.
