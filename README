@@ -3,6 +3,8 @@ GOLD GETTER
 This is a game that I made for a class project. I've been adding things to it when 
 I get bored.
 
+It's really poorly written.
+
 Run it in a terminal with:
 	python3 gold-getter.py
 Or run it in an IDE.
