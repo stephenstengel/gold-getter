@@ -90,7 +90,7 @@ pygame.init()
 
 
 #Global variables because I'm literally just slapping this together in like an hour.
-SCREEN_SIZE = 640
+SCREEN_SIZE = 400
 WINDOW_BOARD_DIMENSION = 5
 
 WINDOW = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
@@ -103,10 +103,14 @@ GRAY = (200, 200, 200)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
+#need to get image sizes before I put them in the screen.
 # Images
-PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png").convert(), (80, 80))
-BOMB_IMAGE = pygame.transform.scale(pygame.image.load("images/bomb.png").convert(), (80, 80))
-GOLD_IMAGE = pygame.transform.scale(pygame.image.load("images/gold.png").convert(), (80, 80))
+# ~ PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png").convert(), (80, 80))
+# ~ BOMB_IMAGE = pygame.transform.scale(pygame.image.load("images/bomb.png").convert(), (80, 80))
+# ~ GOLD_IMAGE = pygame.transform.scale(pygame.image.load("images/gold.png").convert(), (80, 80))
+PLAYER_IMAGE = None
+BOMB_IMAGE = None
+GOLD_IMAGE = None
 
 
 class SquareStatus(object):
@@ -288,6 +292,10 @@ class Engine(object):
 		WINDOW.fill(WHITE)
 		unitSize = SCREEN_SIZE // WINDOW_BOARD_DIMENSION
 		
+		PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png").convert(), (unitSize, unitSize))
+		BOMB_IMAGE = pygame.transform.scale(pygame.image.load("images/bomb.png").convert(), (unitSize, unitSize))
+		GOLD_IMAGE = pygame.transform.scale(pygame.image.load("images/gold.png").convert(), (unitSize, unitSize))
+		
 		#Start points for drawing lines
 		x = 0
 		for i in range(WINDOW_BOARD_DIMENSION):
@@ -300,30 +308,17 @@ class Engine(object):
 		for i in range(len(boardArray)):
 			for j in range(len(boardArray[i])):
 				if boardArray[i][j].isPlayerHere:
-					x = i * unitSize
-					y = j * unitSize
+					y = i * unitSize
+					x = j * unitSize
 					WINDOW.blit(PLAYER_IMAGE, (x,y) )
 				if boardArray[i][j].isBombHere:
-					x = i * unitSize
-					y = j * unitSize
+					y = i * unitSize
+					x = j * unitSize
 					WINDOW.blit(BOMB_IMAGE, (x,y) )
 				if boardArray[i][j].isGoldHere:
-					x = i * unitSize
-					y = j * unitSize
+					y = i * unitSize
+					x = j * unitSize
 					WINDOW.blit(GOLD_IMAGE, (x,y) )
-				
-		#add footprints later
-		
-		# ~ self.isBombHere = isBombHere
-		# ~ self.isPlayerHere = isPlayerHere
-		# ~ self.wasBombHere = wasBombHere
-		# ~ self.wasPlayerHere = wasPlayerHere
-		# ~ self.isGoldHere = isGoldHere
-		
-		# ~ # Drawing X's and O's
-	    # ~ for image in images:
-	        # ~ x, y, IMAGE = image
-	        # ~ win.blit(IMAGE, (x - IMAGE.get_width() // 2, y - IMAGE.get_height() // 2))
 
 		pygame.display.update()
 		
