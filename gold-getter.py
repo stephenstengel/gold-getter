@@ -91,8 +91,9 @@ pygame.init()
 
 #Global variables because I'm literally just slapping this together in like an hour.
 SCREEN_SIZE = 640
+WINDOW_BOARD_DIMENSION = 5
 
-window = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
+WINDOW = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 pygame.display.set_caption("Gold Getter")
 
 # Colors
@@ -123,6 +124,7 @@ class Engine(object):
 		
 	def API(self):
 		DIMENSION = self.BOARD_DIMENSION()
+		WINDOW_BOARD_DIMENSION = DIMENSION
 		theBoardYo = self.createDataArray(DIMENSION)
 		self.playGame(theBoardYo, DIMENSION)
 		
@@ -283,8 +285,25 @@ class Engine(object):
 		## read the array every time that this is called and use a
 		## couple for loops to fill the screen.
 		
+		WINDOW.fill(WHITE)
+		unitSize = SCREEN_SIZE // WINDOW_BOARD_DIMENSION
+		
+		#Start points for drawing lines
+		x = 0
+		for i in range(WINDOW_BOARD_DIMENSION):
+			x = i * unitSize
+			pygame.draw.line(WINDOW, BLACK, (x, 0), (x, SCREEN_SIZE), 1)
+			pygame.draw.line(WINDOW, BLACK, (0, x), (SCREEN_SIZE, x), 1)
+		
+		# I need to get the position in which to place each image.
 		
 		
+		# ~ # Drawing X's and O's
+	    # ~ for image in images:
+	        # ~ x, y, IMAGE = image
+	        # ~ win.blit(IMAGE, (x - IMAGE.get_width() // 2, y - IMAGE.get_height() // 2))
+
+		pygame.display.update()
 		
 	#This function needs to return characters with a priority of:
 	#bomb, player, gold, bombtrail, playertrail
