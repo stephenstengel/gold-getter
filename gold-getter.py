@@ -104,9 +104,9 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 # Images
-PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png"), (80, 80))
-BOMB_IMAGE = pygame.transform.scale(pygame.image.load("images/bomb.png"), (80, 80))
-GOLD_IMAGE = pygame.transform.scale(pygame.image.load("images/gold.png"), (80, 80))
+PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png").convert(), (80, 80))
+BOMB_IMAGE = pygame.transform.scale(pygame.image.load("images/bomb.png").convert(), (80, 80))
+GOLD_IMAGE = pygame.transform.scale(pygame.image.load("images/gold.png").convert(), (80, 80))
 
 
 class SquareStatus(object):
@@ -296,7 +296,29 @@ class Engine(object):
 			pygame.draw.line(WINDOW, BLACK, (0, x), (SCREEN_SIZE, x), 1)
 		
 		# I need to get the position in which to place each image.
+		x = y = 0
+		for i in range(len(boardArray)):
+			for j in range(len(boardArray[i])):
+				if boardArray[i][j].isPlayerHere:
+					x = i * unitSize
+					y = j * unitSize
+					WINDOW.blit(PLAYER_IMAGE, (x,y) )
+				if boardArray[i][j].isBombHere:
+					x = i * unitSize
+					y = j * unitSize
+					WINDOW.blit(BOMB_IMAGE, (x,y) )
+				if boardArray[i][j].isGoldHere:
+					x = i * unitSize
+					y = j * unitSize
+					WINDOW.blit(GOLD_IMAGE, (x,y) )
+				
+		#add footprints later
 		
+		# ~ self.isBombHere = isBombHere
+		# ~ self.isPlayerHere = isPlayerHere
+		# ~ self.wasBombHere = wasBombHere
+		# ~ self.wasPlayerHere = wasPlayerHere
+		# ~ self.isGoldHere = isGoldHere
 		
 		# ~ # Drawing X's and O's
 	    # ~ for image in images:
