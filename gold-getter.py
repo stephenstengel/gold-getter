@@ -128,7 +128,6 @@ class Engine(object):
 		
 	def API(self):
 		DIMENSION = self.BOARD_DIMENSION()
-		WINDOW_BOARD_DIMENSION = DIMENSION
 		theBoardYo = self.createDataArray(DIMENSION)
 		self.playGame(theBoardYo, DIMENSION)
 		
@@ -288,8 +287,9 @@ class Engine(object):
 		## New bit to display the board with pygame. I'm going to just
 		## read the array every time that this is called and use a
 		## couple for loops to fill the screen.
-		
+		WINDOW_BOARD_DIMENSION = DIMENSION
 		WINDOW.fill(WHITE)
+		print("window board dimension: " + str(WINDOW_BOARD_DIMENSION))
 		unitSize = SCREEN_SIZE // WINDOW_BOARD_DIMENSION
 		
 		PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png").convert(), (unitSize, unitSize))
