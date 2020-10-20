@@ -31,7 +31,7 @@
 #TODO:
 #		19 oct 2020: Rewrite to use classes because I know this stuff now.
 #
-#		Use copyright free art! So I can put it on github
+#		Use copyright-free art! So I can put it on github
 #
 #		More bombs. Read array for all, move each one at a time.
 #
