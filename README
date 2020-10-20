@@ -1,5 +1,10 @@
 GOLD GETTER
 
+This is a hack of an old project I made to add pygame for display. I used heavilly
+from this tutorial:
+https://thecodezine.com/a-simple-python-tic-tac-toe-game-using-pygame/
+
+Original README:
 This is a game that I made for a class project. I've been adding things to it when 
 I get bored.
 

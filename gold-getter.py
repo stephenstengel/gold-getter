@@ -21,14 +21,20 @@
 #  MA 02110-1301, USA.
 
 #STEPHEN STENGEL
-#CS112  1PM
-#CHALLENGING PROJECT
+#CS565 project 2
+
 
 #This is a small game where the player gets the gold and avoids the bomb.
 
 #Controls: 	Move player with WASD.
 
 #TODO:
+#		19 oct 2020: Rewrite to use classes because I know this stuff now.
+#
+#		Use copyright free art! So I can put it on github
+#
+#		More bombs. Read array for all, move each one at a time.
+#
 #		Add proximity to chase mechanic. Only chase when within two squares?
 #
 #		Just figured out how to add bombs. Make the detection functions put
@@ -77,6 +83,30 @@
 import random
 import readchar
 import math
+import pygame
+
+
+pygame.init()
+
+
+#Global variables because I'm literally just slapping this together in like an hour.
+SCREEN_SIZE = 640
+
+window = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
+pygame.display.set_caption("Gold Getter")
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (200, 200, 200)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+
+# Images
+PLAYER_IMAGE = pygame.transform.scale(pygame.image.load("images/robot.png"), (80, 80))
+BOMB_IMAGE = pygame.transform.scale(pygame.image.load("images/bomb.png"), (80, 80))
+GOLD_IMAGE = pygame.transform.scale(pygame.image.load("images/gold.png"), (80, 80))
+
 
 class SquareStatus(object):
 	def __init__(self, isBombHere, isPlayerHere, \
@@ -248,6 +278,12 @@ class Engine(object):
 			print(the_underscores * (  (DIMENSION * 3) + (DIMENSION - 1)  ) )
 		#for underscores we need DIMENSION*3 + (DIMENSION - 1) underscores
 		#print("Done!")
+		
+		## New bit to display the board with pygame. I'm going to just
+		## read the array every time that this is called and use a
+		## couple for loops to fill the screen.
+		
+		
 		
 		
 	#This function needs to return characters with a priority of:
@@ -518,6 +554,9 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
+
+
 ################################################################################
 #old movePlayer function
 #~ #player will not move onto bomb
@@ -571,155 +610,3 @@ if __name__ == '__main__':
 				#~ (finalY, finalX) = (y, x)
 			#~ #	print("returnning boardArray")
 				#~ return boardArray
-
-
-
-
-
-# ~ #this geneates random doubles between 0.0 and 1.0 inclusive
-# ~ for i in range(100):
-# ~ 	print(random.uniform(0.0, 1.0))
-# ~ return 0
-
-# ~ I think we should make a data struct called SquareStatus. It will have the 
-# ~ following boolean variables:
-    # ~ isBombHere
-    # ~ isPlayerHere
-    # ~ wasBombHere
-    # ~ wasPlayerHere
-
-# ~ Every turn the user will press the enter key to run the next round.
-
-# ~ The board will have four squares in each cell of the board; one for each 
-# ~ field of the data struct.
-
-# ~ There will be an array with contents of type SquareStatus. Each part of 
-# ~ the array will correspond to one cell of the game board.
-
-# ~ Each turn, the calculations are run to see where the bomb and player go, 
-# ~ then the array is used to display the game board cells. As the game 
-# ~ progresses, there will be "lines" of where the player and the bomb went. 
-
-
-##############old idea for display board
-######wanted to make each square of the board a 2x2 array itself
-#####will now just run a priority check to see which character to display
-	# ~ def displayBoard(self, boardArray, DIMENSION):
-		# ~ print("Displaying board...")
-		# ~ #need two by two
-		# ~ for i in range(DIMENSION):
-			# ~ #isBombHere
-			# ~ for j in range(DIMENSION):
-				# ~ if(boardArray[i][j].isBombHere):
-					# ~ print("B")
-				# ~ else:
-					# ~ print(" ")
-				
-			# ~ #isPlayerHere
-			# ~ for k in range(DIMENSION):
-				# ~ if(isPlayerHere):
-					# ~ print("P")
-				# ~ else:
-					# ~ print(" ")
-				
-		# ~ for l in range(DIMENSION):
-			# ~ #wasBombHere
-			# ~ for m in range(DIMENSION):
-				# ~ pass
-				
-			# ~ #wasPlayerHere
-			# ~ for n in range(DIMENSION):
-				# ~ pass
-		
-		# ~ print("Done!")
-		# ~ pass
-
-############old displays
-	# ~ def displayPlayer(self, boardArray, i, j):
-		# ~ if(boardArray[i][j].isPlayerHere):
-			# ~ return "P"
-		# ~ else:
-			# ~ return " "
-	
-	# ~ def displayBomb(self, boardArray, i, j):
-		# ~ if(boardArray[i][j].isBombHere):
-			# ~ return "B"
-		# ~ else:
-			# ~ return " "
-			
-	# ~ def displayPlayerTrail(self, boardArray, i, j):
-		# ~ if(boardArray[i][j].wasPlayerHere):
-			# ~ return "."
-		# ~ else:
-			# ~ return " "
-			
-	# ~ def displayBombTrail(self, boardArray, i, j):
-		# ~ if(boardArray[i][j].wasBombHere):
-			# ~ return ","
-		# ~ else:
-			# ~ return " "
-			
-	# ~ def displayGold(self, boardArray, i, j):
-		# ~ if(boardArray[i][j].isGoldHere):
-			# ~ return "G"
-		# ~ else:
-			# ~ return " "
-
-
-#########
-
-		#test placement
-		# ~ boardArray[3][3].isPlayerHere = True
-		# ~ boardArray[0][0].isGoldHere = True
-		# ~ boardArray[2][2].isBombHere = True
-		# ~ boardArray[3][2].wasPlayerHere = True
-		# ~ boardArray[3][1].wasPlayerHere = True
-		# ~ boardArray[3][0].wasPlayerHere = True
-		# ~ boardArray[1][2].wasBombHere = True
-		# ~ boardArray[0][2].wasBombHere = True
-		# ~ boardArray[0][3].wasBombHere = True
-
-###################
-#this next bit just displays the values of the contents of the array
-# ~ print("\nContents of the array")
-# ~ for i in range(DIMENSION):
-	# ~ for j in range(DIMENSION):
-		# ~ print("row: " + str(i) + "column: " + str(j))
-		# ~ print("isBombHere: " + str(boardArray[i][j].isBombHere), end = "")
-		# ~ print(" isPlayerHere: " + str(boardArray[i][j].isPlayerHere), end = "")
-		# ~ print(" wasBombHere: " + str(boardArray[i][j].wasBombHere), end = "")
-		# ~ print(" wasPlayerHere: " + str(boardArray[i][j].wasPlayerHere), end = "")
-		# ~ print(" isGoldHere: " + str(boardArray[i][j].isGoldHere), end = "")
-		# ~ print("\n")
-################################
-#Taken from displayBoard:
-# ~ for i in range(DIMENSION):
-	# ~ for j in range(DIMENSION):
-		# ~ print("row: " + str(i) + "column: " + str(j))
-		# ~ print("isBombHere: " + str(boardArray[i][j].isBombHere), end = "")
-		# ~ print(" isPlayerHere: " + str(boardArray[i][j].isPlayerHere), end = "")
-		# ~ print(" wasBombHere: " + str(boardArray[i][j].wasBombHere), end = "")
-		# ~ print(" wasPlayerHere: " + str(boardArray[i][j].wasPlayerHere), end = "")
-		# ~ print(" isGoldHere: " + str(boardArray[i][j].isGoldHere), end = "")
-		# ~ print("\n")
-		
-# ~ for i in range(DIMENSION):
-	# ~ for j in range(DIMENSION):
-		# ~ print("| " + self.displayCharacters(boardArray, i, j) + " ", end = '')
-	# ~ print("|\n _______________")
-############################
-#https://stackoverflow.com/questions/510357/python-read-a-single-character-from-the-user
-#~ import readchar
-#~ print("Reading a char:")
-#~ print(repr(readchar.readchar()))
-#~ print("Reading a key:")
-#~ print(repr(readchar.readkey()))
-###########
-#?????????
-# ~ def betterRandomStart(self):
-	# ~ i = -1.0
-	# ~ j = -1.0
-	# ~ i = random.randint(0, DIMENSION)
-	# ~ j = random.randint(0, DIMENSION)
-	# ~ return (i, j)
-##################
