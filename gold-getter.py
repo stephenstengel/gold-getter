@@ -102,6 +102,7 @@ BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
 
 #need to get image sizes before I put them in the screen.
 # Images
@@ -257,14 +258,25 @@ class Engine(object):
 						"The bomb got you!\n" + \
 			"I don't care what universe you're from-- that's gotta hurt!\n" +\
 						"GAME OVER!\n")
+				WINDOW.fill(RED)
+				end_text = pygame.font.SysFont('courier', 20).render("GAME OVER!", 1, BLACK)
+				WINDOW.blit(end_text, ((SCREEN_SIZE - end_text.get_width()) // 2, (SCREEN_SIZE - end_text.get_height()) // 2))
+				pygame.display.update()
+				pygame.time.delay(5000)
 				exit(0)
 			
 			#check if there is any gold left
 			isStillGold = self.isThereStillGold(updatedBoardArray, DIMENSION)
 			if(isStillGold != True):
 				break
-				
+		
+		# Player wins
 		print("You got all the gold! YAAAAAAAAAY!")
+		WINDOW.fill(GREEN)
+		end_text = pygame.font.SysFont('courier', 20).render("YOU WIN!", 1, BLACK)
+		WINDOW.blit(end_text, ((SCREEN_SIZE - end_text.get_width()) // 2, (SCREEN_SIZE - end_text.get_height()) // 2))
+		pygame.display.update()
+		pygame.time.delay(5000)
 	
 
 	def displayBoard(self, boardArray, DIMENSION):
